@@ -1,7 +1,7 @@
 const asyncHandler = require('../middlewares/asyncHandler');
 const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
-const { uploadImage, deleteImage } = require('../utils/cloudinary');
+const { uploadImageFromBuffer, deleteImage } = require('../utils/cloudinary');
 const fs = require('fs');
 
 exports.getUsers = asyncHandler(async (req, res, next) => {
@@ -13,14 +13,76 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
   res.json({ success: true, count: users.length, total, page, pages: Math.ceil(total/limit), data: users });
 });
 
-exports.updateProfilePic = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
-  if(!user) return next(new ErrorResponse('User not found',404));
-  if(!req.file) return next(new ErrorResponse('File required',400));
-  if(user.profilePic && user.profilePic.public_id) await deleteImage(user.profilePic.public_id);
-  const uploaded = await uploadImage(req.file.path, 'users');
-  user.profilePic = { url: uploaded.url, public_id: uploaded.public_id };
+// ======================= GET PROFILE =======================
+exports.getProfile = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select('-password');
+  
+  if (!user) {
+    return next(new ErrorResponse('User not found', 404));
+  }
+
+  res.json({
+    success: true,
+    data: user
+  });
+});
+
+// ======================= UPDATE PROFILE =======================
+exports.updateProfile = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  
+  if (!user) {
+    return next(new ErrorResponse('User not found', 404));
+  }
+
+  // Update profile picture if provided
+  if (req.file) {
+    if (user.profilePic && user.profilePic.public_id) {
+      await deleteImage(user.profilePic.public_id);
+    }
+    const uploaded = await uploadImageFromBuffer(req.file.buffer, 'users');
+    user.profilePic = { url: uploaded.url, public_id: uploaded.public_id };
+  }
+
+  // Update other fields
+  const allowedFields = ['username', 'email', 'phoneNumber', 'address'];
+  allowedFields.forEach(field => {
+    if (req.body[field] !== undefined) {
+      user[field] = req.body[field];
+    }
+  });
+
   await user.save();
-  try{ fs.unlinkSync(req.file.path); }catch(e){}
-  res.json({ success: true, data: user });
+
+  res.json({
+    success: true,
+    data: user
+  });
+});
+
+// ======================= UPDATE PROFILE PICTURE =======================
+exports.updateProfilePic = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  
+  if (!user) {
+    return next(new ErrorResponse('User not found', 404));
+  }
+  
+  if (!req.file) {
+    return next(new ErrorResponse('File required', 400));
+  }
+  
+  if (user.profilePic && user.profilePic.public_id) {
+    await deleteImage(user.profilePic.public_id);
+  }
+  
+  const uploaded = await uploadImageFromBuffer(req.file.buffer, 'users');
+  user.profilePic = { url: uploaded.url, public_id: uploaded.public_id };
+  
+  await user.save();
+
+  res.json({
+    success: true,
+    data: user
+  });
 });

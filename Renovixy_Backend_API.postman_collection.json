@@ -1,0 +1,899 @@
+{
+  "info": {
+    "_postman_id": "renovixy-backend-api",
+    "name": "Renovixy Backend API",
+    "description": "Complete API collection for Renovixy construction management backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/health",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Check Username",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/check-username?username=johndoe",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "check-username"
+              ],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "johndoe"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Check Email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/check-email?email=john@example.com",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "check-email"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "john@example.com"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "username",
+                  "value": "johndoe",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "john@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "text"
+                },
+                {
+                  "key": "phoneNumber",
+                  "value": "+92-300-1234567",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "123 Main St, Lahore",
+                  "type": "text"
+                },
+                {
+                  "key": "role",
+                  "value": "user",
+                  "type": "text"
+                },
+                {
+                  "key": "profilePic",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/register",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/login",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const response = pm.response.json();",
+                  "  if (response.token) {",
+                  "    pm.collectionVariables.set('auth_token', response.token);",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/me",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Account",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/delete",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "delete"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/users",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/users/profile",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "profile"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "username",
+                  "value": "John Doe",
+                  "type": "text"
+                },
+                {
+                  "key": "phoneNumber",
+                  "value": "+92-300-1234567",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "123 Main St, Karachi",
+                  "type": "text"
+                },
+                {
+                  "key": "profilePic",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/users/profile",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "profile"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Profile Picture",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "profilePic",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/users/profile/picture",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "profile",
+                "picture"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Service Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/service-categories",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "service-categories"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Category (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Renovation\",\n  \"icon\": \"home-repair-service\",\n  \"description\": \"Complete home and office renovation services\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/service-categories",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "service-categories"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/service-categories/:id",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "service-categories",
+                ":id"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Category (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Luxury Renovation\",\n  \"icon\": \"home-repair-service\",\n  \"description\": \"Premium renovation services with high-end materials\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/service-categories/:id",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "service-categories",
+                ":id"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Category (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/service-categories/:id",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "service-categories",
+                ":id"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "Get All Services",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/services",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "services"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Service (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Kitchen Remodeling",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "60d5ecb74b232a001f8b4fa5",
+                  "type": "text",
+                  "description": "Category ID from Service Categories API"
+                },
+                {
+                  "key": "description",
+                  "value": "Modular kitchen installations with premium finishes",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/services",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "services"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Service (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Luxury Kitchen Remodeling",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "60d5ecb74b232a001f8b4fa5",
+                  "type": "text",
+                  "description": "Category ID from Service Categories API"
+                },
+                {
+                  "key": "description",
+                  "value": "Updated scope with quartz countertops and lighting",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/services/:id",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "services",
+                ":id"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Service (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/services/:id",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "services",
+                ":id"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "List Orders (Scoped)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/orders",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "orders"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Optional page number"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "customerName",
+                  "value": "Ali Raza",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "ali@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "phone",
+                  "value": "+92-300-4567890",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "House 45, DHA Phase 5, Karachi",
+                  "type": "text"
+                },
+                {
+                  "key": "latitude",
+                  "value": "24.8267",
+                  "type": "text"
+                },
+                {
+                  "key": "longitude",
+                  "value": "67.0342",
+                  "type": "text"
+                },
+                {
+                  "key": "serviceType",
+                  "value": "60d5ecb74b232a001f8b4fa6,60d5ecb74b232a001f8b4fa7",
+                  "type": "text",
+                  "description": "Service IDs (comma separated)"
+                },
+                {
+                  "key": "description",
+                  "value": "Need a modular kitchen with premium fittings",
+                  "type": "text"
+                },
+                {
+                  "key": "budget",
+                  "value": "50000-80000",
+                  "type": "text"
+                },
+                {
+                  "key": "timeline",
+                  "value": "2-3 weeks",
+                  "type": "text"
+                },
+                {
+                  "key": "relatedPics",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/orders",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "orders"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Order Status (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in progress\",\n  \"estimatedCost\": 7500,\n  \"adminNotes\": \"Crew scheduled for site visit\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/orders/:id/status",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                ":id",
+                "status"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "Get All Projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/projects",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "projects"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Project (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Modern Kitchen Renovation",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "60d5ecb74b232a001f8b4fa5",
+                  "type": "text",
+                  "description": "Category ID from Service Categories API"
+                },
+                {
+                  "key": "description",
+                  "value": "Complete modern kitchen renovation project",
+                  "type": "text"
+                },
+                {
+                  "key": "client",
+                  "value": "John Doe",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "DHA Phase 5, Karachi",
+                  "type": "text"
+                },
+                {
+                  "key": "duration",
+                  "value": "3 months",
+                  "type": "text"
+                },
+                {
+                  "key": "completedDate",
+                  "value": "2024-12-31",
+                  "type": "text"
+                },
+                {
+                  "key": "status",
+                  "value": "completed",
+                  "type": "text"
+                },
+                {
+                  "key": "featured",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "services",
+                  "value": "60d5ecb74b232a001f8b4fa6,60d5ecb74b232a001f8b4fa7",
+                  "type": "text",
+                  "description": "Service IDs (comma separated)"
+                },
+                {
+                  "key": "budget.min",
+                  "value": "50000",
+                  "type": "text"
+                },
+                {
+                  "key": "budget.max",
+                  "value": "80000",
+                  "type": "text"
+                },
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/projects",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "projects"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:5001"
+    },
+    {
+      "key": "auth_token",
+      "value": ""
+    }
+  ]
+}
