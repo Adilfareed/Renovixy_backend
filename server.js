@@ -40,7 +40,7 @@ app.use(limiter);
 app.use('/api', routes);
 
 // health
-app.get('/health', (req,res)=>res.json({ok:true, time: new Date().toISOString()}));
+app.get('/health', (req,res)=>res.json({ok:true, time: new Date().toISOString(), message: "Server is running"}));
 
 app.use((err, req, res, next) => {
   console.error("ERROR:", err);
