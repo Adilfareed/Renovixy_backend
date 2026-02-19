@@ -1,4 +1,5 @@
 const cloudinary = require('cloudinary').v2;
+const { Readable } = require('stream');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -13,9 +14,26 @@ const uploadImage = async (filePath, folder = 'construction_app') => {
   return { url: result.secure_url, public_id: result.public_id };
 };
 
+const uploadImageFromBuffer = async (buffer, folder = 'construction_app') => {
+  return new Promise((resolve, reject) => {
+    const stream = Readable.from(buffer);
+    const opts = { folder };
+    
+    const uploadStream = cloudinary.uploader.upload_stream(opts, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve({ url: result.secure_url, public_id: result.public_id });
+      }
+    });
+    
+    stream.pipe(uploadStream);
+  });
+};
+
 const deleteImage = async (publicId) => {
   if(!publicId) return null;
   return await cloudinary.uploader.destroy(publicId);
 };
 
-module.exports = { uploadImage, deleteImage };
+module.exports = { uploadImage, uploadImageFromBuffer, deleteImage };
