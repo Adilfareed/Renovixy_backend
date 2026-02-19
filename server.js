@@ -15,12 +15,28 @@ app.use(express.json());
 // ------------------------------------
 // 🌐 CORS (Allow frontend communication)
 // ------------------------------------
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://renovixy.com",
+  "https://construct-repair.vercel.app",
+];
+
 app.use(
   cors({
-    origin: "http://localhost:3000", // You can replace this with your frontend domain later
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps, curl, postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: "GET,POST,PUT,DELETE",
+    credentials: true, // optional, if you need cookies/auth headers
   })
 );
+
 
 // -----------------------------
 // 📦 Body Parser
