@@ -20,6 +20,7 @@ const allowedOrigins = [
   "https://www.renovixy.com",
   "https://renovixy.com",
   "https://construct-repair.vercel.app",
+  "https://constrcut-repair.vercel.app",
 ];
 
 app.use(
