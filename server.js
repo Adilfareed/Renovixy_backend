@@ -17,7 +17,8 @@ app.use(express.json());
 // ------------------------------------
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://www.renovixy.com/",
+  "https://www.renovixy.com",
+  "https://renovixy.com",
   "https://construct-repair.vercel.app",
 ];
 
