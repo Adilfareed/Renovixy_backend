@@ -11,6 +11,11 @@ const orderSchema = new mongoose.Schema({
     longitude: { type: Number, required: false }
   },
   serviceType: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }],
+  projectType:{
+    type : mongoose.Schema.Types.ObjectId, ref :"Project",
+    required: false,
+    default: null
+  },
   description: { type: String, required: true },
   budget: String,
   timeline: String,
